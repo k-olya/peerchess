@@ -7,7 +7,7 @@ export interface LifecycleInterface {
   onFree(): any;
 }
 
-export abstract class Lifecycle {
+export abstract class Lifecycle implements LifecycleInterface {
   // state variables
   created: boolean = false;
   updated: boolean = false;

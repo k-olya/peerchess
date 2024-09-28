@@ -1,5 +1,5 @@
 import { EntityQuery } from "./entity-query";
-import { create, free, Lifecycle, update } from "../lifecycle";
+import { Lifecycle } from "../lifecycle";
 import { Collection } from "lib/collection";
 
 export type QueryCollection = Collection<EntityQuery<any>>;
@@ -7,29 +7,28 @@ export type SystemOptions = {
   queries?: QueryCollection;
 };
 
-export class System implements Lifecycle {
-  created?: boolean;
-  updated?: boolean;
+export class System extends Lifecycle {
   queries: QueryCollection;
   constructor(options?: SystemOptions) {
+    super();
     this.queries = options.queries || {};
   }
-  create() {
+  onCreate() {
     for (const key in this.queries) {
-      create(this.queries[key]);
+      this.queries[key].create();
     }
   }
-  update() {
+  onUpdate() {
     for (const key in this.queries) {
-      update(this.queries[key]);
+      this.queries[key].update();
     }
   }
-  run() {
+  onRun() {
     // do nothing
   }
-  free() {
+  onFree() {
     for (const key in this.queries) {
-      free(this.queries[key]);
+      this.queries[key].free();
     }
   }
 }

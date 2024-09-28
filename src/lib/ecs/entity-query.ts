@@ -1,7 +1,7 @@
 import { EntityDataStructure } from "./entity-data-structure";
 import { EntityWorld } from "./entity-world";
 import { Entity } from "./entity";
-import { create, free, Lifecycle, run, update } from "../lifecycle";
+import { Lifecycle } from "../lifecycle";
 
 export type EntityQueryOptions =
   | {
@@ -11,10 +11,7 @@ export type EntityQueryOptions =
     }
   | string[];
 
-export class EntityQuery<T extends EntityDataStructure> implements Lifecycle {
-  // lifecycle fields
-  created?: boolean;
-  updated?: boolean;
+export class EntityQuery<T extends EntityDataStructure> extends Lifecycle {
   // components to include
   include: string[];
   // components must pass a filter function
@@ -33,14 +30,15 @@ export class EntityQuery<T extends EntityDataStructure> implements Lifecycle {
     include: string[],
     filter?: (entity: Entity) => boolean
   ) {
+    super();
     this.include = include;
     this.filter = filter;
     this.world = world;
     this.entities = new dataStructure();
   }
-  create(): void {
+  onCreate(): void {
     // create data structure
-    create(this.entities);
+    this.entities.create();
     // bind to events
     for (const component of this.include) {
       this.unbinders.push(
@@ -61,20 +59,20 @@ export class EntityQuery<T extends EntityDataStructure> implements Lifecycle {
       this.entities.set(entity);
     }
   }
-  update(): void {
+  onUpdate(): void {
     // update entities
-    update(this.entities);
+    this.entities.update();
   }
   // iterate over entities
-  run(): Iterable<Entity> {
-    return run(this.entities);
+  onRun(): Iterable<Entity> {
+    return this.entities.run();
   }
-  free(): void {
+  onFree(): void {
     // unbind from events
     for (const unbind of this.unbinders) {
       unbind();
     }
     // free entities
-    free(this.entities);
+    this.entities.free();
   }
 }

@@ -1,11 +1,11 @@
-import { Entity } from "./entity-world";
+import { Entity } from "./entity";
 import { Lifecycle } from "../lifecycle";
 
 // abstracts entity lookup and iteration
-export interface EntityDataStructure extends Lifecycle {
-  set(entity: Entity): void;
-  get(_id: string): Entity;
-  run(): Iterable<Entity>;
-  delete(_id: string): void;
-  clear(): void;
+export abstract class EntityDataStructure extends Lifecycle {
+  abstract set(entity: Entity): void;
+  abstract get(_id: string): Entity;
+  abstract onRun(): Iterable<Entity>;
+  abstract delete(_id: string): void;
+  abstract clear(): void;
 }

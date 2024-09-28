@@ -1,18 +1,34 @@
 import { createNanoEvents } from "nanoevents";
 import { Entity, forEachComponent } from "./entity";
+import { EmitterObject } from "lib/emitter";
+import { debugMode } from "lib/debug";
+
+export interface EntityWorldEvents {
+  "add-entity": (entity: Entity) => void;
+  "delete-entity": (entity: Entity) => void;
+  "update-entity": (entity: Entity) => void;
+  "add-component-*": (entity: Entity, value: any) => void;
+  "update-component-*": (entity: Entity, value: any) => void;
+  "delete-component-*": (entity: Entity) => void;
+}
 
 // EntityWorld is a class that manages entities
 // and emits events when entities are modified
-export class EntityWorld {
+export class EntityWorld extends EmitterObject {
   entities: Map<string, Entity>;
   emitter = createNanoEvents();
   constructor(entities?: Entity[]) {
+    super();
     this.entities = new Map();
     entities.forEach(entity => this.entities.set(entity._id, entity));
   }
   set(entity: Entity) {
     const prev = this.entities.get(entity._id);
     if (prev) {
+      // if debug mode is on, warn about overwriting entities
+      if (debugMode) {
+        console.warn(`Overwriting entity with id "${entity._id}"`);
+      }
       // don't throw an error, update the components instead
       this.setComponents(prev, entity);
     } else {
@@ -88,11 +104,4 @@ export class EntityWorld {
       this.emit("delete-entity", entity);
     }
   }
-  emit(event: string, ...args: any[]) {
-    this.emitter.emit(event, ...args);
-  }
-  on(event: string, callback: (...args: any[]) => void) {
-    return this.emitter.on(event, callback);
-  }
 }
-export { Entity };

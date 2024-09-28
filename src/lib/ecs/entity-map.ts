@@ -1,7 +1,7 @@
-import { Entity } from "./entity-world";
+import { Entity } from "./entity";
 import { EntityDataStructure } from "./entity-data-structure";
 
-export class EntityMap implements EntityDataStructure {
+export class EntityMap extends EntityDataStructure {
   entities: Map<string, Entity> = new Map();
   set(entity: Entity): void {
     this.entities.set(entity._id, entity);
@@ -9,7 +9,7 @@ export class EntityMap implements EntityDataStructure {
   get(_id: string): Entity {
     return this.entities.get(_id);
   }
-  run(): Iterable<Entity> {
+  onRun(): Iterable<Entity> {
     return this.entities.values();
   }
   delete(_id: string): void {
@@ -18,15 +18,13 @@ export class EntityMap implements EntityDataStructure {
   clear(): void {
     this.entities.clear();
   }
-  created?: boolean;
-  updated?: boolean;
-  create() {
+  onCreate() {
     // do nothing
   }
-  update() {
+  onUpdate() {
     // do nothing since the map is always up to date
   }
-  free() {
+  onFree() {
     // do nothing
   }
 }

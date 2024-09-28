@@ -3,7 +3,7 @@ import { EntityDataStructure } from "./entity-data-structure";
 
 // sorted array of entities
 // TODO: test and decide which removal method to keep: markForRemoval or delete
-export class EntitySortedArray implements EntityDataStructure {
+export class EntitySortedArray extends EntityDataStructure {
   entities: (Entity | null)[] = [];
   markedForRemoval?: boolean[];
   // binary search
@@ -80,19 +80,17 @@ export class EntitySortedArray implements EntityDataStructure {
     this.entities = [];
     // this.markedForRemoval = undefined;
   }
-  created?: boolean;
-  updated?: boolean;
   // do nothing on create
-  create() {}
+  onCreate() {}
   // make the array null-free, sorted and unique
-  update() {
+  onUpdate() {
     this.compact();
     // this.removeMarked();
     this.entities.sort((a, b) => a._id.localeCompare(b._id));
     this.unique();
   }
   // iterate over entities
-  *run() {
+  *onRun() {
     {
       /*for (const entity of this.entities) {
       if (entity !== null) {
@@ -103,7 +101,7 @@ export class EntitySortedArray implements EntityDataStructure {
     return this.entities;
   }
   // clear on free
-  free() {
+  onFree() {
     this.clear();
   }
 }

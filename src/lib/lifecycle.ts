@@ -1,43 +1,59 @@
-export interface Lifecycle {
-  created?: boolean;
-  updated?: boolean;
+import { Constructor } from "./mixin";
+
+export interface LifecycleInterface {
+  onCreate(): any;
+  onUpdate(): any;
+  onRun(): any;
+  onFree(): any;
+}
+
+export abstract class Lifecycle {
+  // state variables
+  created: boolean = false;
+  updated: boolean = false;
+
+  // lifecycle event handlers for a subclass to implement
+
   // create and update are called during lazy init stage
   // create is for creating resources
-  create(): any;
   // to be implemented by subclass
+  abstract onCreate(): any;
 
   // update is for updating resources when props change
-  update(): any;
   // to be implemented by subclass
+  abstract onUpdate(): any;
+
   // run is called during the main loop or when the instance needs to perform work
-  run(): any;
   // to be implemented by subclass
+  abstract onRun(): any;
+
   // free is called during cleanup
-  free(): any;
+  abstract onFree(): any;
   // to be implemented by subclass
-}
-// wrapper functions that handle lifecycle
-export function create<T extends Lifecycle>(x: T) {
-  if (x.created) return;
-  const r = x.create();
-  x.created = true;
-  return r;
-}
-export function update<T extends Lifecycle>(x: T) {
-  if (x.updated) return;
-  create(x); // ensure created
-  const r = x.update();
-  x.updated = true;
-  return r;
-}
-export function run<T extends Lifecycle>(x: T) {
-  update(x); // ensure updated
-  return x.run();
-}
-export function free<T extends Lifecycle>(x: T) {
-  if (!x.created) return;
-  const r = x.free();
-  x.created = false;
-  x.updated = false;
-  return r;
+
+  // lifecycle methods
+  create() {
+    if (this.created) return;
+    const r = this.onCreate();
+    this.created = true;
+    return r;
+  }
+  update() {
+    if (this.updated) return;
+    this.create(); // ensure created
+    const r = this.onUpdate();
+    this.updated = true;
+    return r;
+  }
+  run() {
+    this.update(); // ensure updated
+    return this.onRun();
+  }
+  free() {
+    if (!this.created) return;
+    const r = this.onFree();
+    this.created = false;
+    this.updated = false;
+    return r;
+  }
 }

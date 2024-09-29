@@ -25,7 +25,7 @@ export abstract class Lifecycle implements LifecycleInterface {
 
   // run is called during the main loop or when the instance needs to perform work
   // to be implemented by subclass
-  abstract onRun(): any;
+  abstract onRun(...args: any[]): any;
 
   // free is called during cleanup
   abstract onFree(): any;
@@ -45,9 +45,10 @@ export abstract class Lifecycle implements LifecycleInterface {
     this.updated = true;
     return r;
   }
-  run() {
+  run(...args: any[]) {
     this.update(); // ensure updated
-    return this.onRun();
+    // console.log(this.onRun);
+    return this.onRun(...args);
   }
   free() {
     if (!this.created) return;

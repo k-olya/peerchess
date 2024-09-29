@@ -7,28 +7,18 @@ export type SystemOptions = {
   queries?: QueryCollection;
 };
 
-export class System extends Lifecycle {
+export abstract class System extends Lifecycle {
+  abstract _id: string; // systems added to the same game loop will be ordered by ids
   queries: QueryCollection;
   constructor(options?: SystemOptions) {
     super();
-    this.queries = options.queries || {};
+    this.queries = options?.queries || {};
   }
-  onCreate() {
-    for (const key in this.queries) {
-      this.queries[key].create();
-    }
-  }
-  onUpdate() {
-    for (const key in this.queries) {
-      this.queries[key].update();
-    }
-  }
-  onRun() {
-    // do nothing
-  }
-  onFree() {
+  // override free instead of implementing onFree to keep onFree abstract
+  free() {
     for (const key in this.queries) {
       this.queries[key].free();
     }
+    super.free();
   }
 }

@@ -20,16 +20,20 @@ export class EntityWorld extends EmitterObject {
   constructor(entities?: Entity[]) {
     super();
     this.entities = new Map();
-    entities.forEach(entity => this.entities.set(entity._id, entity));
+    entities?.forEach(entity => this.set(entity));
   }
   set(entity: Entity) {
     const prev = this.entities.get(entity._id);
     if (prev) {
       // if debug mode is on, warn about overwriting entities
+      // i don't throw an error here because otherwise games would crash
+      // but the library is designed to manage only one entity object with a given id
       if (debugMode) {
-        console.warn(`Overwriting entity with id "${entity._id}"`);
+        console.warn(
+          `Overwriting entity with id "${entity._id}". If you didn't expect this, you might be unintentionally creating this entity twice. For updating existing entities please use setComponents or setComponent instead.`
+        );
       }
-      // don't throw an error, update the components instead
+
       this.setComponents(prev, entity);
     } else {
       this.entities.set(entity._id, entity);

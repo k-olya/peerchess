@@ -1,3 +1,4 @@
+import { System } from "./ecs/system";
 import { EmitterInterface, EmitterObject } from "./emitter";
 import { Lifecycle } from "./lifecycle";
 
@@ -5,6 +6,8 @@ export interface GameLoop extends EmitterInterface {
   time: number;
   delta: number;
   frame: number;
+  start(): void;
+  pause(): void;
 }
 
 export interface GameLoopEvents {
@@ -15,9 +18,9 @@ export interface GameLoopEvents {
 
 // a game loop bound to requestAnimationFrame
 export class RenderLoop extends EmitterObject implements GameLoop {
-  time: number;
-  delta: number;
-  frame: number;
+  time: number = 0;
+  delta: number = 0;
+  frame: number = 0;
   start() {
     this.time = performance.now();
     this.emit("start", this);
@@ -42,9 +45,9 @@ export class RenderLoop extends EmitterObject implements GameLoop {
 
 // a game loop bound to setTimeout
 export class TimeoutLoop extends EmitterObject implements GameLoop {
-  time: number;
-  delta: number;
-  frame: number;
+  time: number = 0;
+  delta: number = 0;
+  frame: number = 0;
   start() {
     this.time = performance.now();
     this.emit("start", this);
@@ -66,4 +69,16 @@ export class TimeoutLoop extends EmitterObject implements GameLoop {
     }
     this.emit("pause", this);
   }
+}
+
+export function loopSystem<T extends GameLoop>(
+  loopConstructor: new () => T,
+  system: System
+) {
+  const loop = new loopConstructor();
+  loop.on("loop", () => {
+    system.run();
+  });
+  loop.start();
+  return loop;
 }

@@ -6,11 +6,14 @@ export class EntityMap extends EntityDataStructure {
   set(entity: Entity): void {
     this.entities.set(entity._id, entity);
   }
-  get(_id: string): Entity {
+  get(_id: string): Entity | undefined {
     return this.entities.get(_id);
   }
-  onRun(): Iterable<Entity> {
+  onRun(): IterableIterator<Entity> {
     return this.entities.values();
+  }
+  [Symbol.iterator](): IterableIterator<Entity> {
+    return this.run();
   }
   delete(_id: string): void {
     this.entities.delete(_id);

@@ -18,12 +18,12 @@ export function Emitter<T extends Constructor>(Base: T) {
       super(...args);
     }
     on(event: string, callback: EventCallback) {
-      // warn the user if debug mode is on and the event doesn't exist
-      if (debugMode && !(event in this.emitter.events))
-        console.warn(`Trying to trigger a non-existent event "${event}"`);
       return this.emitter.on(event, callback);
     }
     emit(event: string, ...args: any[]) {
+      // warn the user if debug mode is on and the event doesn't exist
+      if (debugMode && !(event in this.emitter.events))
+        console.warn(`Trying to trigger a non-existent event "${event}"`);
       return this.emitter.emit(event, ...args);
     }
   };

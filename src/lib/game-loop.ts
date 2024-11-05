@@ -76,8 +76,8 @@ export function loopSystem<T extends GameLoop>(
   system: System
 ) {
   const loop = new loopConstructor();
-  loop.on("loop", () => {
-    system.run();
+  loop.on("loop", rl => {
+    system.run(rl);
   });
   loop.start();
   return loop;

@@ -17,9 +17,9 @@ export class SystemGroup extends System {
     console.log(`${indent}${this._id}`);
     for (const system of this.children) {
       if (system instanceof SystemGroup) {
-        system.print(indent + " - ");
+        system.print(indent + "\t");
       } else {
-        console.log(`${indent}  ${system._id}`);
+        console.log(`${indent}\t${system._id}`);
       }
     }
   }

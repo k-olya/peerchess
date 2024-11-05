@@ -7,7 +7,7 @@ export interface LifecycleInterface {
   onFree(): any;
 }
 
-export abstract class Lifecycle implements LifecycleInterface {
+export class Lifecycle implements LifecycleInterface {
   // state variables
   created: boolean = false;
   updated: boolean = false;
@@ -17,18 +17,18 @@ export abstract class Lifecycle implements LifecycleInterface {
   // create and update are called during lazy init stage
   // create is for creating resources
   // to be implemented by subclass
-  abstract onCreate(): any;
+  onCreate(): any {}
 
   // update is for updating resources when props change
   // to be implemented by subclass
-  abstract onUpdate(): any;
+  onUpdate(): any {}
 
   // run is called during the main loop or when the instance needs to perform work
   // to be implemented by subclass
-  abstract onRun(...args: any[]): any;
+  onRun(...args: any[]): any {}
 
   // free is called during cleanup
-  abstract onFree(): any;
+  onFree(): any {}
   // to be implemented by subclass
 
   // lifecycle methods

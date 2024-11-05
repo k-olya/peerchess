@@ -1,12 +1,24 @@
 ## A game engine written in typescript
 
-### Install
+### install
 
 ```
 npm install
 ```
 
-### Features:
+start dev server:
+
+```
+npm start
+```
+
+generate production build:
+
+```
+npm run build
+```
+
+### features:
 
 - [x] **ECS** pattern implementation
 - [x] cached **entity queries**
@@ -19,16 +31,16 @@ npm install
 - [ ] webgl rendering engine
 - [ ] chess game demo
 
-### Available scripts:
+### how to configure multiplayer
 
-start dev server:
-
-```
-npm start
-```
-
-generate production build:
+create a `.env` file:
 
 ```
-npm run build
+PEER_HOST="peer.example.com"
+PEER_PORT=443
+PEER_PATH="/peer"
+STUN_URL="stun:stun.example.com"
+TURN_URL="turn:turn.example.com"
+TURN_USERNAME="username"
+TURN_CREDENTIAL="password"
 ```

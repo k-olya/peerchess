@@ -1,7 +1,7 @@
 import { EntityOne } from "lib/ecs/entity-one";
 import { EntityQuery } from "lib/ecs/entity-query";
 import { globalWorld } from "lib/ecs/global-world";
-import { QueryCollection, System, SystemWithQueries } from "lib/ecs/system";
+import { QueryCollection, System } from "lib/ecs/system";
 import { DataConnection } from "peerjs";
 import * as QRCode from "lib/qr";
 import { NetAdapter } from "systems/peer";
@@ -42,7 +42,7 @@ const INITIAL_PIECES = [
   { x: 7, y: 7, type: "rook", color: "black" },
 ];
 
-export class GameRenderer extends SystemWithQueries<GameQueries> {
+export class GameRenderer extends System<GameQueries> {
   onCreate() {
     super.onCreate();
     const network = this.queries.network.run();
@@ -79,7 +79,4 @@ export class GameRenderer extends SystemWithQueries<GameQueries> {
         </div>
       </div>`;
   }
-  onFree(): void {
-    super.onFree();
-  }
-} //
+}

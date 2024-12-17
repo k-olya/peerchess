@@ -1,4 +1,3 @@
-import { QueryCollection, System } from "lib/ecs/system";
 import { InputState } from "../input";
 import Peer, { DataConnection } from "peerjs";
 import { EmitterObject } from "lib/emitter";

@@ -1,7 +1,7 @@
 import { EntityOne } from "lib/ecs/entity-one";
 import { EntityQuery } from "lib/ecs/entity-query";
 import { globalWorld } from "lib/ecs/global-world";
-import { QueryCollection, System, SystemWithQueries } from "lib/ecs/system";
+import { QueryCollection, System } from "lib/ecs/system";
 import { DataConnection } from "peerjs";
 import * as QRCode from "lib/qr";
 import { NetAdapter } from "systems/peer";
@@ -13,14 +13,14 @@ export interface ConnectionQueries extends QueryCollection {
   html: DependencyQuery<HTMLElement>;
 }
 
-export class ConnectionRenderer extends SystemWithQueries<ConnectionQueries> {
+export class ConnectionRenderer extends System<ConnectionQueries> {
   onCreate() {
     super.onCreate();
-    const netAdapter = this.queries.network.run() as NetAdapter;
+    const netAdapter = this.queries.network.run();
     if (assume(netAdapter, "No network system found")) {
       return;
     }
-    const html = this.queries.html.run() as HTMLElement;
+    const html = this.queries.html.run();
     if (assume(html, "No html root found")) {
       return;
     }
@@ -44,7 +44,4 @@ export class ConnectionRenderer extends SystemWithQueries<ConnectionQueries> {
       html.innerHTML = `You are a CLIENT connecting to a host`;
     }
   }
-  onFree(): void {
-    super.onFree();
-  }
-} //
+}

@@ -11,12 +11,14 @@ import { DependencyQuery } from "lib/dependency-query";
 
 export class ConnectionScene extends SystemGroup {
   constructor() {
+    const queries = {
+      network: new DependencyQuery<NetAdapter>(globalWorld, "network-adapter"),
+      html: new DependencyQuery<HTMLElement>(globalWorld, "html-root"),
+    };
     super("connection-scene", [
-      new ConnectionRenderer("connection-renderer", {
-        network: new DependencyQuery(globalWorld, "network-adapter"),
-        html: new DependencyQuery(globalWorld, "html-root"),
-      }),
+      new ConnectionRenderer("connection-renderer", queries),
     ]);
+    this.queries = queries;
   }
   unbinder: (() => void) | undefined;
   onCreate() {
@@ -55,6 +57,8 @@ export class ConnectionScene extends SystemGroup {
   onFree() {
     // unbind events
     this.unbinder?.();
+    this.queries.network.free();
+    this.queries.html.free();
     super.onFree();
   }
 }

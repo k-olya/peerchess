@@ -4,11 +4,11 @@ import { EntityQuery } from "lib/ecs/entity-query";
 import { EntitySortedArray } from "lib/ecs/entity-sorted-array";
 import { BasicSystem, System } from "lib/ecs/system";
 
-export class SystemGroup extends BasicSystem {
+export class SystemGroup extends System {
   _id: string;
   children: EntitySortedArray;
   constructor(_id: string, systems: System[]) {
-    super(_id);
+    super(_id, {});
     this.children = new EntitySortedArray(systems);
     this._id = _id;
   }
@@ -32,7 +32,9 @@ export class SystemGroup extends BasicSystem {
   }
   onFree() {
     for (const system of this.children) {
-      system.free();
+      if (system?.created) {
+        system.free();
+      }
     }
   }
 }

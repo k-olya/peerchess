@@ -39,5 +39,8 @@ export class GameScene extends SystemGroup {
       return;
     }
   }
-  onFree() {}
+  onFree() {
+    this.queries.network.free();
+    this.queries.html.free();
+  }
 }

@@ -2,21 +2,31 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"
+    />
     <title>Peerchess</title>
   </head>
   <body class="bg-dark">
     <canvas id="canvas" class="w-full h-screen"></canvas>
-    <div
-      id="loading"
-      class="absolute w-full h-screen left-0 top-0 flex items-center justify-center animate-pulse"
-    >
-      <svg
-        class="w-80 max-w-full animate-spin"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
+    <div id="root">
+      <div
+        id="loading"
+        class="absolute w-full h-screen left-0 top-0 flex items-center justify-center animate-pulse text-white"
       >
-        <path fill="none" stroke="white" d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-      </svg>
+        <svg
+          class="w-80 max-w-full animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="none"
+            stroke="white"
+            d="M21 12a9 9 0 1 1-6.219-8.56"
+          ></path>
+        </svg>
+      </div>
     </div>
   </body>
 </html>

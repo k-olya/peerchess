@@ -11,7 +11,9 @@ export type EntityQueryOptions =
     }
   | string[];
 
-export class EntityQuery<T extends EntityDataStructure> extends Lifecycle {
+export class EntityQuery<T extends EntityDataStructure> extends Lifecycle<
+  IterableIterator<Entity>
+> {
   // components to include
   include: string[];
   // components must pass a filter function
@@ -55,6 +57,10 @@ export class EntityQuery<T extends EntityDataStructure> extends Lifecycle {
     }
     // add existing entities
     for (const entity of this.world.entities.values()) {
+      // if the entity includes any of the components
+      if (!this.include.some(component => entity[component] !== undefined)) {
+        continue;
+      }
       if (this.filter && !this.filter(entity)) continue;
       this.entities.set(entity);
     }
@@ -64,8 +70,11 @@ export class EntityQuery<T extends EntityDataStructure> extends Lifecycle {
     this.entities.update();
   }
   // iterate over entities
-  onRun(): Iterable<Entity> {
+  onRun(): IterableIterator<Entity> {
     return this.entities.run();
+  }
+  [Symbol.iterator](): IterableIterator<Entity> {
+    return this.run();
   }
   onFree(): void {
     // unbind from events

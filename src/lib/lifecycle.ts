@@ -7,7 +7,7 @@ export interface LifecycleInterface {
   onFree(): any;
 }
 
-export class Lifecycle implements LifecycleInterface {
+export class Lifecycle<T> implements LifecycleInterface {
   // state variables
   created: boolean = false;
   updated: boolean = false;
@@ -45,7 +45,7 @@ export class Lifecycle implements LifecycleInterface {
     this.updated = true;
     return r;
   }
-  run(...args: any[]) {
+  run(...args: any[]): T {
     this.update(); // ensure updated
     // console.log(this.onRun);
     return this.onRun(...args);

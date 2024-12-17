@@ -2,7 +2,9 @@ import { Entity } from "./entity";
 import { Lifecycle } from "../lifecycle";
 
 // abstracts entity lookup and iteration
-export abstract class EntityDataStructure extends Lifecycle {
+export abstract class EntityDataStructure extends Lifecycle<
+  IterableIterator<Entity>
+> {
   // TODO: find a better way to handle initial entities
   private initial: Entity[] = [];
   create() {

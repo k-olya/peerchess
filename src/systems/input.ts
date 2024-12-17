@@ -1,4 +1,4 @@
-import { System } from "lib/ecs/system";
+import { BasicSystem, System } from "lib/ecs/system";
 import { Emitter } from "lib/emitter";
 
 export interface InputMap {
@@ -9,7 +9,7 @@ export interface InputState {
   [key: string]: boolean;
 }
 
-export class KbMInputSystem extends Emitter(System) {
+export class KbMInputSystem extends Emitter(BasicSystem) {
   kbDownListener?: (e: KeyboardEvent) => void;
   kbUpListener?: (e: KeyboardEvent) => void;
   mouseDownListener?: (e: MouseEvent) => void;

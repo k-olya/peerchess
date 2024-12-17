@@ -59,7 +59,7 @@ export class EntityWorld extends EmitterObject {
   _setComponent(entity: Entity, key: string, value: any) {
     const prevHas = typeof entity[key] !== "undefined";
     const nextHas = typeof value !== "undefined";
-    if (prevHas && nextHas && value !== value) {
+    if (prevHas && nextHas && value !== entity[key]) {
       entity[key] = value;
       this.emit("update-component-" + key, entity, value);
     } else if (prevHas && !nextHas) {

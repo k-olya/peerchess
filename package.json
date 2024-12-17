@@ -6,7 +6,7 @@
     "test": "jest",
     "build": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
-    "start": "webpack serve --port 3000"
+    "start": "webpack serve --port 3000 --host 0.0.0.0"
   },
   "author": "",
   "license": "ISC",

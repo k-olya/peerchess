@@ -2,13 +2,13 @@
 
 import { EntityQuery } from "lib/ecs/entity-query";
 import { EntitySortedArray } from "lib/ecs/entity-sorted-array";
-import { System } from "lib/ecs/system";
+import { BasicSystem, System } from "lib/ecs/system";
 
-export class SystemGroup extends System {
+export class SystemGroup extends BasicSystem {
   _id: string;
   children: EntitySortedArray;
   constructor(_id: string, systems: System[]) {
-    super();
+    super(_id);
     this.children = new EntitySortedArray(systems);
     this._id = _id;
   }

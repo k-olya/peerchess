@@ -8,11 +8,8 @@ import { NetAdapter } from "systems/peer";
 import { assume } from "lib/assume";
 import { DependencyQuery } from "lib/dependency-query";
 import { h } from "lib/html";
-
-export interface ConnectionQueries extends QueryCollection {
-  network: DependencyQuery<NetAdapter>;
-  html: DependencyQuery<HTMLElement>;
-}
+import { html, render } from "uhtml";
+import { ConnectionQueries } from ".";
 
 function copyToClipboard(url: string): void {
   if (!window.navigator.clipboard) {
@@ -37,31 +34,42 @@ export class ConnectionRenderer extends System<ConnectionQueries> {
     if (assume(netAdapter, "No network system found")) {
       return;
     }
-    const html = this.queries.html.run();
-    if (assume(html, "No html root found")) {
+    const el = this.queries.el.run();
+    if (assume(el, "No html root found")) {
       return;
     }
-    this.render(netAdapter, html);
+    this.render(netAdapter, el);
   }
-  render(adapter: NetAdapter, html: HTMLElement) {
+  render(adapter: NetAdapter, el: HTMLElement) {
     if (adapter.role === "host") {
       const url = window.location.origin + "/?peer=" + adapter.peerId;
       const qr = QRCode.generatePNG(url, { version: 5 });
-      html.innerHTML = h`
-      <div class="absolute w-full h-screen left-0 top-0 flex items-center justify-center text-white">
-      <div class="flex flex-col">
-        <div>You are a HOST with id ${adapter.peerId}</div>
-        <img class="animate-pulse" src="${qr}">
-        <div>Scan this code</div>
-        <div><code class="cursor-pointer" onclick="${() =>
-          copyToClipboard(
-            url
-          )}">${url}<img class="w-4 h-4 inline ml-1" src="./copy.svg" /></code></div>
-        <div>or open this link to connect</div>
-      </div>
-      </div>`;
+      render(
+        el,
+        html` <div
+          class="absolute w-full h-screen left-0 top-0 flex items-center justify-center text-white"
+        >
+          <div class="flex flex-col">
+            <div>You are a HOST with id ${adapter.peerId}</div>
+            <img class="animate-pulse" src="${qr}" />
+            <div>Scan this code</div>
+            <div>
+              <code
+                class="cursor-pointer"
+                onclick="${() => copyToClipboard(url)}"
+                >${url}<img class="w-4 h-4 inline ml-1" src="./copy.svg"
+              /></code>
+            </div>
+            <div>or open this link to connect</div>
+          </div>
+        </div>`
+      );
     } else {
-      html.innerHTML = `You are a CLIENT connecting to a host`;
+      render(
+        el,
+        html`You are CLIENT ${adapter.peerId} connecting to host
+        ${adapter.peers?.[0] ?? ""}`
+      );
     }
   }
 }

@@ -6,6 +6,7 @@ import { DataConnection } from "peerjs";
 import * as QRCode from "lib/qr";
 import { NetAdapter } from "systems/peer";
 import { GameQueries } from ".";
+import { html, render } from "uhtml";
 
 const INITIAL_PIECES = [
   { x: 0, y: 1, type: "pawn", color: "white" },
@@ -50,33 +51,50 @@ export class GameRenderer extends System<GameQueries> {
       console.error("No network system found");
       return;
     }
-    const html = this.queries.html.run();
-    if (!html) {
+    const el = this.queries.el.run();
+    if (!el) {
       console.error("No html root found");
       return;
     }
-    this.render(network, html);
+    this.render(network, el);
   }
-  render(adapter: NetAdapter, html: HTMLElement) {
-    html.innerHTML = `
-      <div class="absolute w-full h-screen left-0 top-0 flex items-center justify-center text-white">
+  render(adapter: NetAdapter, el: HTMLElement) {
+    render(
+      el,
+      html` <div
+        class="absolute w-full h-screen left-0 top-0 flex items-center justify-center text-white"
+      >
         <div class="flex flex-col w-screen items-center">
-            <div>
-    You are a ${adapter.role.toLocaleUpperCase()} ${
-      adapter.peerId
-    } connected to ${adapter.peers.join(", ")}
-            </div>
-            <div class="relative w-[80vmin] h-[80vmin]"><img src="/field.webp" />
-           ${INITIAL_PIECES.map(
-             piece =>
-               `<img class="absolute w-[10vmin] h-[10vmin]" src=/${piece.color.charAt(
-                 0
-               )}${piece.type}.png style="top: ${10 * piece.y}vmin; left: ${
-                 10 * piece.x
-               }vmin;" />`
-           ).join("")} 
-            </div>
+          <div>
+            You are a ${adapter.role.toLocaleUpperCase()} ${adapter.peerId}
+            connected to ${adapter.peers.join(", ")}
+          </div>
+          <div class="relative w-[80vmin] h-[80vmin]">
+            <img src="/field.webp" />
+            ${INITIAL_PIECES.map(
+              piece =>
+                html`<img
+                  class="absolute w-[10vmin] h-[10vmin]"
+                  src=${`./${piece.color.charAt(0)}${piece.type}.png`}
+                  style=${`top: ${10 * piece.y}vmin; left: ${
+                    10 * piece.x
+                  }vmin;`}
+                /> `
+            )}
+          </div>
         </div>
-      </div>`;
+      </div>`
+    );
   }
+}
+{
+  /*}`
+<img
+                  class="absolute w-[10vmin] h-[10vmin]"
+                  src="${`./${piece.color.charAt(0)}${piece.type}.png`}"
+                  style="top:
+                ${10 * piece.y}vmin; left: ${10 * piece.x}vmin;"
+                  )
+                />
+`*/
 }

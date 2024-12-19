@@ -8,12 +8,18 @@ import { NetAdapter } from "systems/peer";
 import { PeerClient } from "systems/peer/peer-client";
 import { PeerHost } from "systems/peer/peer-host";
 import { DependencyQuery } from "lib/dependency-query";
+import { QueryCollection } from "lib/ecs/system";
+import { getLS } from "lib/ls";
 
+export interface ConnectionQueries extends QueryCollection {
+  network: DependencyQuery<NetAdapter>;
+  el: DependencyQuery<HTMLElement>;
+}
 export class ConnectionScene extends SystemGroup {
   constructor() {
     const queries = {
       network: new DependencyQuery<NetAdapter>(globalWorld, "network-adapter"),
-      html: new DependencyQuery<HTMLElement>(globalWorld, "html-root"),
+      el: new DependencyQuery<HTMLElement>(globalWorld, "html-root"),
     };
     super("connection-scene", [
       new ConnectionRenderer("connection-renderer", queries),
@@ -27,14 +33,16 @@ export class ConnectionScene extends SystemGroup {
     const params = new URLSearchParams(window.location.search);
     // if there is a peer to connect
     // it means we are a client
-    const netMode = params.get("peer") ? "client" : "host";
-    const peerId = params.get("peer") ?? randomId();
+    const remotePeerId = params.get("peer");
+    // get our peer id from local storage
+    // or set it to random
+    const ourPeerId = getLS("peerId", randomId());
 
     let netAdapter: NetAdapter;
-    if (netMode === "client") {
-      netAdapter = new PeerClient(peerId);
+    if (remotePeerId) {
+      netAdapter = new PeerClient(ourPeerId, remotePeerId);
     } else {
-      netAdapter = new PeerHost(peerId);
+      netAdapter = new PeerHost(ourPeerId);
     }
     // add connection callback
     this.unbinder = netAdapter.on("connection", conn => {

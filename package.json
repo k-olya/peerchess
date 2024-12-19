@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "nanoevents": "^9.0.0",
-    "peerjs": "^1.5.4"
+    "peerjs": "^1.5.4",
+    "uhtml": "^4.7.0"
   }
 }

@@ -9,14 +9,13 @@ export class PeerClient extends EmitterObject implements NetAdapter {
   peerId: string;
   role: "client" = "client";
 
-  constructor(peerId: string) {
+  constructor(ourPeerId: string, remotePeerId: string) {
     super();
-    const id = randomId();
-    const peer = new Peer(id, PEER_CONFIG);
-    this.peers = [peerId];
-    this.peerId = id;
+    const peer = new Peer(ourPeerId, PEER_CONFIG);
+    this.peers = [remotePeerId];
+    this.peerId = ourPeerId;
     peer.on("open", () => {
-      this.connect(peer, peerId);
+      this.connect(peer, remotePeerId);
     });
   }
 

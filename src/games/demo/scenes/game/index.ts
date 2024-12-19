@@ -10,7 +10,7 @@ import { DependencyQuery } from "lib/dependency-query";
 
 export interface GameQueries extends QueryCollection {
   network: DependencyQuery<NetAdapter>;
-  html: DependencyQuery<HTMLElement>;
+  el: DependencyQuery<HTMLElement>;
 }
 
 export class GameScene extends SystemGroup {
@@ -20,16 +20,16 @@ export class GameScene extends SystemGroup {
       globalWorld,
       "network-adapter"
     );
-    const html = new DependencyQuery<HTMLElement>(globalWorld, "html-root");
+    const el = new DependencyQuery<HTMLElement>(globalWorld, "html-root");
     super("game", [
       new GameRenderer("005-game-renderer", {
         network,
-        html,
+        el,
       }),
     ]);
     this.queries = {
       network,
-      html,
+      el,
     };
   }
   onCreate() {
@@ -41,6 +41,6 @@ export class GameScene extends SystemGroup {
   }
   onFree() {
     this.queries.network.free();
-    this.queries.html.free();
+    this.queries.el.free();
   }
 }
